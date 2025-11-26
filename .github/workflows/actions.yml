@@ -9,19 +9,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK
+      # Use JDK 17 when setting up Android SDK
+      - name: Set up JDK 17 for Android SDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
       - name: Install Android SDK components
         run: |
-          sdkmanager "build-tools;23.0.1" "platforms;android-23" "platform-tools" \
-            "extras;android;m2repository" "extras;google;m2repository"
+          sdkmanager "build-tools;23.0.1" \
+                     "platforms;android-23" \
+                     "platform-tools" \
+                     "extras;android;m2repository" \
+                     "extras;google;m2repository"
+
+      # Now switch to JDK 8 for your actual build
+      - name: Set up JDK 8 for build
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
 
       - name: Build
         run: mvn clean install
