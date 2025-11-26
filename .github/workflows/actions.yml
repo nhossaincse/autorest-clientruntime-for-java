@@ -5,27 +5,30 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '8'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
       - name: Install Android SDK components
         run: |
-          sdkmanager "build-tools;23.0.1"
-          sdkmanager "android-23"
-          sdkmanager "platform-tools"
-          sdkmanager "extras;android;m2repository"
-          sdkmanager "extras;google;m2repository"
-          sdkmanager "extras;android;support"
+          sdkmanager "build-tools;23.0.1" "platforms;android-23" "platform-tools" \
+            "extras;android;m2repository" "extras;google;m2repository"
+
       - name: Build
         run: mvn clean install
+
       - name: Checkstyle
         run: mvn checkstyle:check
+
       - name: Azure Android Client Authentication check
         working-directory: azure-android-client-authentication
         run: ./gradlew check
