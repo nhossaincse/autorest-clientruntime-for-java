@@ -12,6 +12,8 @@ jobs:
         with:
           distribution: temurin
           java-version: '8'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
       - name: Install Android SDK components
         run: |
           sdkmanager "build-tools;23.0.1"
